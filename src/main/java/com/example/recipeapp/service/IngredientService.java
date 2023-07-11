@@ -2,10 +2,12 @@ package com.example.recipeapp.service;
 
 import com.example.recipeapp.model.Ingredient;
 
+import java.io.File;
+import java.nio.file.Path;
 import java.util.Map;
 
 public interface IngredientService {
-    long addIngredient(Ingredient ingredient);
+    Ingredient addIngredient(Ingredient ingredient);
 
     Ingredient getIngredient(long id);
 
@@ -14,4 +16,8 @@ public interface IngredientService {
     boolean deleteIngredient(long id);
 
     Map<Long, Ingredient> getAllIngredients();
+
+    File getIngredientFile();
+
+    Path ingredientFileUrl();
 }
