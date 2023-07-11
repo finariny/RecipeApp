@@ -65,8 +65,8 @@ public class RecipeController {
                             array = @ArraySchema(schema = @Schema(implementation = Recipe.class)))),
             @ApiResponse(responseCode = "400", description = "Параметры запроса отсутствуют или имеют некорректный формат")
     })
-    public ResponseEntity<Recipe> editRecipe(@PathVariable long id, @RequestBody Recipe newRecipe) {
-        Recipe recipe = recipeService.editRecipe(id, newRecipe);
+    public ResponseEntity<Recipe> updateRecipe(@PathVariable long id, @RequestBody Recipe newRecipe) {
+        Recipe recipe = recipeService.updateRecipe(id, newRecipe);
         if (recipe == null) {
             return ResponseEntity.notFound().build();
         }

@@ -6,6 +6,9 @@ import lombok.NoArgsConstructor;
 
 import java.util.LinkedList;
 
+/**
+ * Рецепт
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

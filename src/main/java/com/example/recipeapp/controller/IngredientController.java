@@ -65,8 +65,8 @@ public class IngredientController {
                             array = @ArraySchema(schema = @Schema(implementation = Ingredient.class)))),
             @ApiResponse(responseCode = "400", description = "Параметры запроса отсутствуют или имеют некорректный формат")
     })
-    public ResponseEntity<Ingredient> editIngredient(@PathVariable long id, @RequestBody Ingredient newIngredient) {
-        Ingredient ingredient = ingredientService.editIngredient(id, newIngredient);
+    public ResponseEntity<Ingredient> updateIngredient(@PathVariable long id, @RequestBody Ingredient newIngredient) {
+        Ingredient ingredient = ingredientService.updateIngredient(id, newIngredient);
         if (ingredient == null) {
             return ResponseEntity.badRequest().build();
         }

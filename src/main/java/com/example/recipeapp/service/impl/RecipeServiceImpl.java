@@ -78,7 +78,7 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public Recipe editRecipe(long id, Recipe recipe) {
+    public Recipe updateRecipe(long id, Recipe recipe) {
         if (!validationService.validate(recipe)) {
             throw new ValidationException(recipe.toString());
         }
