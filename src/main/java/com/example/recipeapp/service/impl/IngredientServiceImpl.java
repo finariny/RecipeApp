@@ -66,7 +66,7 @@ public class IngredientServiceImpl implements IngredientService {
     }
 
     @Override
-    public Ingredient editIngredient(long id, Ingredient ingredient) {
+    public Ingredient updateIngredient(long id, Ingredient ingredient) {
         if (!validationService.validate(ingredient)) {
             throw new ValidationException(ingredient.toString());
         }
