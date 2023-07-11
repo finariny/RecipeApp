@@ -9,12 +9,14 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/ingredient")
 @Tag(name = "Ингредиенты")
@@ -23,22 +25,20 @@ public class IngredientController {
 
     private final IngredientService ingredientService;
 
-    public IngredientController(IngredientService ingredientService) {
-        this.ingredientService = ingredientService;
-    }
-
     @PostMapping
     @Operation(summary = "Добавление ингредиента")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Запрос выполнен"),
+            @ApiResponse(responseCode = "200", description = "Запрос выполнен",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            array = @ArraySchema(schema = @Schema(implementation = Ingredient.class)))),
             @ApiResponse(responseCode = "400", description = "Параметры запроса отсутствуют или имеют некорректный формат")
     })
-    public ResponseEntity<Long> addIngredient(@RequestBody Ingredient ingredient) {
-        long ingredientId = ingredientService.addIngredient(ingredient);
-        if (ingredientId == 0) {
+    public ResponseEntity<Ingredient> addIngredient(@RequestBody Ingredient ingredient) {
+        Ingredient newIngredient = ingredientService.addIngredient(ingredient);
+        if (newIngredient == null) {
             return ResponseEntity.badRequest().build();
         }
-        return ResponseEntity.ok(ingredientId);
+        return ResponseEntity.ok(newIngredient);
     }
 
     @GetMapping("/{id}")
