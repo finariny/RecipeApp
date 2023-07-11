@@ -1,8 +1,10 @@
 package com.example.recipeapp.service.impl;
 
+import com.example.recipeapp.exception.ValidationException;
 import com.example.recipeapp.model.Ingredient;
 import com.example.recipeapp.service.FileService;
 import com.example.recipeapp.service.IngredientService;
+import com.example.recipeapp.service.ValidationService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -26,15 +28,14 @@ public class IngredientServiceImpl implements IngredientService {
 
     @Value("${path.to.ingredient.file}")
     private String ingredientFilePath;
-
     @Value("${name.of.ingredient.file}")
     private String ingredientFileName;
 
     private static Map<Long, Ingredient> ingredientMap = new HashMap<>();
-
     private static long id = 1;
 
     private final FileService fileService;
+    private final ValidationService validationService;
 
     @PostConstruct
     private void init() {
@@ -45,6 +46,9 @@ public class IngredientServiceImpl implements IngredientService {
 
     @Override
     public Ingredient addIngredient(Ingredient ingredient) {
+        if (!validationService.validate(ingredient)) {
+            throw new ValidationException(ingredient.toString());
+        }
         if (!(ingredientMap.containsValue(ingredient))) {
             ingredientMap.put(id, ingredient);
             saveToIngredientFile();
@@ -63,6 +67,9 @@ public class IngredientServiceImpl implements IngredientService {
 
     @Override
     public Ingredient editIngredient(long id, Ingredient ingredient) {
+        if (!validationService.validate(ingredient)) {
+            throw new ValidationException(ingredient.toString());
+        }
         if (ingredientMap.containsKey(id)) {
             ingredientMap.replace(id, ingredient);
             saveToIngredientFile();
