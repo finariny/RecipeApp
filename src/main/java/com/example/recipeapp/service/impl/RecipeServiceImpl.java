@@ -1,10 +1,12 @@
 package com.example.recipeapp.service.impl;
 
+import com.example.recipeapp.exception.ValidationException;
 import com.example.recipeapp.model.Ingredient;
 import com.example.recipeapp.model.Recipe;
 import com.example.recipeapp.service.FileService;
 import com.example.recipeapp.service.IngredientService;
 import com.example.recipeapp.service.RecipeService;
+import com.example.recipeapp.service.ValidationService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -31,22 +33,20 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Value("${path.to.recipe.file}")
     private String recipeFilePath;
-
     @Value("${name.of.recipe.file}")
     private String recipeFileName;
 
     @Value("${path.to.formatted.recipe.file}")
     private String formattedRecipeFilePath;
-
     @Value("${name.of.formatted.recipe.file}")
     private String formattedRecipeFileName;
 
     private static Map<Long, Recipe> recipeMap = new HashMap<>();
-
     private static long id = 1;
 
     private final IngredientService ingredientService;
     private final FileService fileService;
+    private final ValidationService validationService;
 
     @PostConstruct
     private void init() {
@@ -57,6 +57,9 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public Recipe addRecipe(Recipe recipe) {
+        if (!validationService.validate(recipe)) {
+            throw new ValidationException(recipe.toString());
+        }
         if (!recipeMap.containsValue(recipe)) {
             recipeMap.put(id, recipe);
             addIngredientFromRecipe(recipe);
@@ -76,6 +79,9 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public Recipe editRecipe(long id, Recipe recipe) {
+        if (!validationService.validate(recipe)) {
+            throw new ValidationException(recipe.toString());
+        }
         if (recipeMap.containsKey(id)) {
             addIngredientFromRecipe(recipe);
             recipeMap.replace(id, recipe);
